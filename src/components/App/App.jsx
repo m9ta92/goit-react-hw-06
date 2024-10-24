@@ -1,14 +1,12 @@
 import css from './App.module.css';
 
-import { useState } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
 import {
-	selectContacts,
 	addContact,
 	deleteContact,
+	selectContacts,
 } from '../../redux/contactsSlice';
-// import { selectNameFilter, changeFilter } from '../../redux/filtersSlice';
+import { selectNameFilter, changeFilter } from '../../redux/filtersSlice';
 import { nanoid } from 'nanoid';
 
 import ContactForm from '../ContactForm/ContactForm.jsx';
@@ -16,12 +14,10 @@ import SearchBox from '../SearchBox/SearchBox.jsx';
 import ContactList from '../ContactList/ContactList.jsx';
 
 function App() {
-	const contacts = useSelector(selectContacts);
 	const dispatch = useDispatch();
-	const [filter, setFilter] = useState('');
-	// const filter = useSelector(selectNameFilter);
+	const contacts = useSelector(selectContacts);
+	const filter = useSelector(selectNameFilter);
 
-	// ↓ Add contact ↓
 	const onAddContact = formData => {
 		const finalContact = {
 			...formData,
@@ -30,19 +26,14 @@ function App() {
 		dispatch(addContact(finalContact));
 	};
 
-	// ↓ Delete contact ↓
-	const onDeleteContact = profileId => {
-		dispatch(deleteContact(profileId));
-		// const updatedContact = contacts.filter(contact => contact.id !== profileId);
-		// setContacts(updatedContact);
+	const onDeleteContact = contactId => {
+		dispatch(deleteContact(contactId));
 	};
 
-	// ↓ Function to update the filter ↓
 	const handleChange = event => {
-		setFilter(event.target.value);
+		dispatch(changeFilter(event.target.value));
 	};
 
-	// ↓ Filtering contact ↓
 	const filteredContacts = contacts.filter(contact =>
 		contact.name.toLowerCase().includes(filter.toLowerCase())
 	);
